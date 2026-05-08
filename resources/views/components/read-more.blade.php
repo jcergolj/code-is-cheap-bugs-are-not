@@ -1,5 +1,5 @@
 @props(['href'])
 
 <x-p>
-    Read more: <x-link href="{{ $href }}">{{ $slot }}</x-link>
+    Read more by @jcergolj: <x-link href="{{ $href }}">{{ $slot }}</x-link>
 </x-p>
