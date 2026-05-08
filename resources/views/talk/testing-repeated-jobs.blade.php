@@ -79,8 +79,6 @@ Queue::assertPushed(function (TestJob $job) use (&$index, $assertions) {
             Now you know exactly which job and which parameter failed.
         </x-p>
 
-        <x-p>
-            Read more: <x-link href="https://jcergolj.me.uk/blog/better-ways-to-test-repeated-laravel-jobs">Better Ways to Test Repeated Laravel Jobs</x-link>
-        </x-p>
+        <x-read-more href="https://jcergolj.me.uk/blog/better-ways-to-test-repeated-laravel-jobs">Better Ways to Test Repeated Laravel Jobs</x-read-more>
     </x-body>
 @endsection

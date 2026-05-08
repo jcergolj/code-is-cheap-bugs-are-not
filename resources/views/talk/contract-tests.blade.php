@@ -216,8 +216,6 @@ php artisan test --exclude-group=integration
 php artisan test --group=integration
         </x-code>
 
-        <x-p>
-            Read more: <x-link href="https://jcergolj.me.uk/blog/contract-tests">Contract Tests</x-link>
-        </x-p>
+        <x-read-more href="https://jcergolj.me.uk/blog/contract-tests">Contract Tests</x-read-more>
     </x-body>
 @endsection

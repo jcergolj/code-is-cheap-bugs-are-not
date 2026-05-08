@@ -62,8 +62,6 @@ class CreateTest extends TestCase
 }
         </x-code>
 
-        <x-p>
-            Powered by <x-link href="https://github.com/jcergolj/laravel-view-test-assertions">@jcergoj - laravel-view-test-assertions</x-link>
-        </x-p>
+        <x-powered-by href="https://github.com/jcergolj/laravel-view-test-assertions">laravel-view-test-assertions</x-powered-by>
     </x-body>
 @endsection

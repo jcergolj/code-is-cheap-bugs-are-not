@@ -107,8 +107,6 @@ class RequireApiKeyTest extends TestCase
 }
         </x-code>
 
-        <x-p>
-            Powered by @jcergolj <x-link href="https://github.com/jcergolj/additional-test-assertions-for-laravel">additional-test-assertions-for-laravel</x-link>
-        </x-p>
+        <x-powered-by href="https://github.com/jcergolj/additional-test-assertions-for-laravel">additional-test-assertions-for-laravel</x-powered-by>
     </x-body>
 @endsection

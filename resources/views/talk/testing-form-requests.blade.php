@@ -100,8 +100,6 @@ class StoreUserRequestTest extends TestCase
 }
         </x-code>
 
-        <x-p>
-            Powered by @jcergolj <x-link href="https://github.com/jcergolj/laravel-form-request-assertions">laravel-form-request-assertions</x-link>
-        </x-p>
+        <x-powered-by href="https://github.com/jcergolj/laravel-form-request-assertions">laravel-form-request-assertions</x-powered-by>
     </x-body>
 @endsection

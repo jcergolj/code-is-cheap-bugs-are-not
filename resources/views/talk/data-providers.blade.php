@@ -86,8 +86,6 @@ class AuthorizationTest extends TestCase
 }
         </x-code>
 
-        <x-p>
-            Read more: <x-link href="https://jcergolj.me.uk/blog/data-providers-use-cases">Data Providers Use Cases</x-link>
-        </x-p>
+        <x-read-more href="https://jcergolj.me.uk/blog/data-providers-use-cases">Data Providers Use Cases</x-read-more>
     </x-body>
 @endsection
