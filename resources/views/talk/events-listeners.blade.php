@@ -1,7 +1,7 @@
 @extends('layouts.talk-app')
 
 @section('content')
-    <x-title>Events &amp; Listeners</x-title>
+    <x-title>Events & Listeners</x-title>
 
     <x-small-title>
         Decouple with events
@@ -12,19 +12,10 @@
             Events let you react to things without cluttering your controllers.
         </x-p>
 
-        <x-p>
-            <strong>The event:</strong>
-        </x-p>
+        <x-section-label>Event</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace App\Events;
-
-use App\Models\Order;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
-
+// app/Events/OrderPlaced.php
 class OrderPlaced
 {
     use Dispatchable, SerializesModels;
@@ -33,39 +24,30 @@ class OrderPlaced
 }
         </x-code>
 
-        <x-p>
-            <strong>The controller that fires it:</strong>
-        </x-p>
+        <x-section-label>Controller</x-section-label>
 
         <x-code language="php">
+// app/Http/Controllers/OrderController.php
 public function store(StoreOrderRequest $request)
 {
     $order = Order::create($request->validated());
 
     OrderPlaced::dispatch($order);
 
-    return redirect()->route('orders.show', $order);
+    // ...
 }
         </x-code>
 
-        <x-p>
-            <strong>The listener:</strong>
-        </x-p>
+        <x-section-label>Listener</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace App\Listeners;
-
-use App\Events\OrderPlaced;
-
+// app/Listeners/UpdateOrderStatus.php
 class UpdateOrderStatus
 {
     public function handle(OrderPlaced $event): void
     {
         if ($event->order->total <= 0) {
             $event->order->update(['status' => 'cancelled']);
-
             return;
         }
 
@@ -74,13 +56,10 @@ class UpdateOrderStatus
 }
         </x-code>
 
-        <x-p>
-            <strong>Feature test — assert event is dispatched:</strong>
-        </x-p>
+        <x-section-label>Feature Test — assert event is dispatched</x-section-label>
 
-        <x-code language="php">
-use Illuminate\Support\Facades\Event;
-
+        <x-code language="php" dataLine="2, 6">
+// tests/Feature/Http/Controllers/OrderController/StoreTest.php
 Event::fake();
 
 $this->post(route('orders.store'), $data);
@@ -88,22 +67,10 @@ $this->post(route('orders.store'), $data);
 Event::assertDispatched(OrderPlaced::class);
         </x-code>
 
-        <x-p>
-            <strong>Unit test — assert listener logic:</strong>
-        </x-p>
+        <x-section-label>Unit Test — assert listener logic</x-section-label>
 
-        <x-code language="php">
-&lt;?php
-
-namespace Tests\Unit\Listeners;
-
-use App\Events\OrderPlaced;
-use App\Listeners\UpdateOrderStatus;
-use App\Models\Order;
-use Illuminate\Support\Facades\Event;
-use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
-
+        <x-code language="php" dataLine="7-10">
+// tests/Unit/Listeners/UpdateOrderStatusTest.php
 class UpdateOrderStatusTest extends TestCase
 {
     #[Test]

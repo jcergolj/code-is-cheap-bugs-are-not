@@ -1,33 +1,34 @@
 @extends('layouts.talk-app')
 
 @section('content')
-    <div class="flex items-center gap-3 mb-2">
-        <span class="bg-[#0284c7] text-white text-sm font-bold px-3 py-1 rounded-full">Part 3 of 4</span>
-        <span class="text-[#64748b] text-sm font-medium">Solving Complex Query Testing</span>
-    </div>
-
-    <x-title>3/4 Query Objects</x-title>
+    <x-title>Complex Queries</x-title>
 
     <x-small-title>
-        Single-purpose query classes
+        When scopes multiply, extract a query object
     </x-small-title>
 
     <x-body>
         <x-p>
-            Query objects are like repositories but with a single method.
-        </x-p>
-
-        <x-p>
-            <strong>The query object:</strong>
+            Imagine a controller with this query chain:
         </x-p>
 
         <x-code language="php">
-&lt;?php
+// app/Http/Controllers/UserController.php
+$results = User::search($request)
+    ->onlyEditor()
+    ->filterByStatus($request)
+    ->orderBy('created_at', 'desc')
+    ->paginate();
+        </x-code>
 
-namespace App\Queries;
+        <x-p>
+            Testing this in a feature test means creating users with different roles, statuses, and dates. One small change breaks everything.
+        </x-p>
 
-use App\Models\User;
+        <x-section-label>The Solution: Query Object</x-section-label>
 
+        <x-code language="php">
+// app/Queries/SearchAndFilterUsersQuery.php
 class SearchAndFilterUsersQuery
 {
     public function run($request)
@@ -41,11 +42,8 @@ class SearchAndFilterUsersQuery
 }
         </x-code>
 
-        <x-p>
-            <strong>The controller:</strong>
-        </x-p>
-
         <x-code language="php">
+// app/Http/Controllers/UserController.php
 public function index(Request $request, SearchAndFilterUsersQuery $query)
 {
     $results = $query->run($request);
@@ -54,25 +52,44 @@ public function index(Request $request, SearchAndFilterUsersQuery $query)
 }
         </x-code>
 
-        <x-p>
-            <strong>When to use query objects:</strong>
-        </x-p>
-
-        <x-ul>
-            <li>One-off complex queries</li>
-            <li>When you don't need full CRUD operations</li>
-            <li>When the query is reusable across controllers</li>
-        </x-ul>
-
-        <x-p>
-            <strong>Test the same way as repositories:</strong>
-        </x-p>
+        <x-section-label>Feature Test — mock the query object</x-section-label>
 
         <x-code language="php">
-$query = new SearchAndFilterUsersQuery;
-$results = $query->run($request);
+// tests/Feature/Http/Controllers/UserController/IndexTest.php
+$query = Mockery::mock(SearchAndFilterUsersQuery::class);
+$this->app->instance(SearchAndFilterUsersQuery::class, $query);
 
-$this->assertCount(2, $results);
+$users = User::factory()->count(3)->create();
+
+$query->shouldReceive('run')
+    ->once()
+    ->andReturn($users);
+
+$response = $this->get('/users');
+
+$response->assertViewIs('users.index')
+    ->assertViewHas('results', $users);
+        </x-code>
+
+        <x-section-label>Unit Test — test the query object</x-section-label>
+
+        <x-code language="php">
+// tests/Unit/Queries/SearchAndFilterUsersQueryTest.php
+class SearchAndFilterUsersQueryTest extends TestCase
+{
+    #[Test]
+    public function run_finds_users_by_name(): void
+    {
+        $user1 = User::factory()->create(['name' => 'John']);
+        $user2 = User::factory()->create(['name' => 'Jane']);
+
+        $query = new SearchAndFilterUsersQuery;
+        $results = $query->run((object)['search' => 'John']);
+
+        $this->assertTrue($results->contains($user1));
+        $this->assertFalse($results->contains($user2));
+    }
+}
         </x-code>
     </x-body>
 @endsection

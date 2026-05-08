@@ -1,7 +1,7 @@
 @extends('layouts.talk-app')
 
 @section('content')
-    <x-title>Testing Form Requests</x-title>
+    <x-title>Form Requests</x-title>
 
     <x-small-title>
         Validate once, test twice
@@ -13,24 +13,12 @@
             Test them in isolation.
         </x-p>
 
-        <x-p>
-            <strong>The request:</strong>
-        </x-p>
+        <x-section-label>Form Request</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace App\Http\Requests;
-
-use Illuminate\Foundation\Http\FormRequest;
-
+// app/Http/Requests/StoreUserRequest.php
 class StoreUserRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
@@ -41,11 +29,10 @@ class StoreUserRequest extends FormRequest
 }
         </x-code>
 
-        <x-p>
-            <strong>The controller:</strong>
-        </x-p>
+        <x-section-label>Controller</x-section-label>
 
         <x-code language="php">
+// app/Http/Controllers/UserController.php
 public function store(StoreUserRequest $request)
 {
     User::create($request->validated());
@@ -54,30 +41,19 @@ public function store(StoreUserRequest $request)
 }
         </x-code>
 
-        <x-p>
-            <strong>Feature test — assert form request is used:</strong>
-        </x-p>
+        <x-section-label>Feature Test — assert form request is used</x-section-label>
 
-        <x-code language="php">
+        <x-code language="php" dataLine="4">
+// tests/Feature/Http/Controllers/UserController/StoreTest.php
 $this->post(route('users.store'));
 
 $this->assertContainsFormRequest(StoreUserRequest::class);
         </x-code>
 
-        <x-p>
-            <strong>Unit test — assert validation rules:</strong>
-        </x-p>
+        <x-section-label>Unit Test — assert validation rules</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace Tests\Unit\Http\Requests;
-
-use App\Http\Requests\StoreUserRequest;
-use Jcergolj\FormRequestAssertions\TestableFormRequest;
-use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
-
+// tests/Unit/Http/Requests/StoreUserRequestTest.php
 class StoreUserRequestTest extends TestCase
 {
     use TestableFormRequest;
@@ -100,6 +76,8 @@ class StoreUserRequestTest extends TestCase
 }
         </x-code>
 
-        <x-powered-by href="https://github.com/jcergolj/laravel-form-request-assertions">laravel-form-request-assertions</x-powered-by>
+        <x-powered-by href="https://github.com/jcergolj/laravel-form-request-assertions">
+            laravel-form-request-assertions
+        </x-powered-by>
     </x-body>
 @endsection

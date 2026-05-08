@@ -167,8 +167,8 @@ pre[data-line] {
     right: 0;
     padding: inherit 0;
     margin-top: 1em;
-    background: rgba(2, 132, 199, 0.1);
-    background: linear-gradient(to right, rgba(2, 132, 199, 0.15) 70%, rgba(2, 132, 199, 0));
+    background: rgba(2, 132, 199, 0.25);
+    background: linear-gradient(to right, rgba(2, 132, 199, 0.35) 70%, rgba(2, 132, 199, 0.05));
     pointer-events: none;
     line-height: inherit;
     white-space: pre;
@@ -182,8 +182,8 @@ pre[data-line] {
     left: 0.6em;
     min-width: 1em;
     padding: 0 0.5em;
-    background-color: rgba(2, 132, 199, 0.3);
-    color: #e0f2fe;
+    background-color: rgba(2, 132, 199, 0.9);
+    color: #ffffff;
     font: bold 65%/1.5 sans-serif;
     text-align: center;
     vertical-align: 0.3em;

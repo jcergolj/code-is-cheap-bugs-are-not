@@ -69,7 +69,7 @@ $this->app->instance(UserRepository::class, $repository);
 $users = User::factory()->count(3)->create();
 
 $repository->shouldReceive('searchAndFilter')
-    ->onc()
+    ->once()
     ->andReturn($users);
 
 $response = $this->get('/users');

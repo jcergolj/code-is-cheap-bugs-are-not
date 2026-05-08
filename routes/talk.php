@@ -9,15 +9,11 @@ Route::get('/silly-bit', function () {
 })->name('talk.silly-bit');
 
 Route::get('/why', function () {
-    return view('talk/why', ['next' => route('talk.shoulders-of-giants'), 'previous' => route('talk.silly-bit')]);
+    return view('talk/why', ['next' => route('talk.phpunit'), 'previous' => route('talk.silly-bit')]);
 })->name('talk.why');
 
-Route::get('/shoulders-of-giants', function () {
-    return view('talk/shoulders-of-giants', ['next' => route('talk.phpunit'), 'previous' => route('talk.why')]);
-})->name('talk.shoulders-of-giants');
-
 Route::get('/phpunit', function () {
-    return view('talk/phpunit', ['next' => route('talk.feature-vs-unit'), 'previous' => route('talk.shoulders-of-giants')]);
+    return view('talk/phpunit', ['next' => route('talk.feature-vs-unit'), 'previous' => route('talk.why')]);
 })->name('talk.phpunit');
 
 Route::get('/feature-vs-unit', function () {
@@ -25,19 +21,31 @@ Route::get('/feature-vs-unit', function () {
 })->name('talk.feature-vs-unit');
 
 Route::get('/arrange-act-assert', function () {
-    return view('talk/arrange-act-assert', ['next' => route('talk.testing-views'), 'previous' => route('talk.feature-vs-unit')]);
+    return view('talk/arrange-act-assert', ['next' => route('talk.test-structure'), 'previous' => route('talk.feature-vs-unit')]);
 })->name('talk.arrange-act-assert');
 
+Route::get('/test-structure', function () {
+    return view('talk/test-structure', ['next' => route('talk.testing-views'), 'previous' => route('talk.arrange-act-assert')]);
+})->name('talk.test-structure');
+
 Route::get('/testing-views', function () {
-    return view('talk/testing-views', ['next' => route('talk.testing-store-method'), 'previous' => route('talk.arrange-act-assert')]);
+    return view('talk/testing-views', ['next' => route('talk.testing-storing-in-db'), 'previous' => route('talk.test-structure')]);
 })->name('talk.testing-views');
 
-Route::get('/testing-store-method', function () {
-    return view('talk/testing-store-method', ['next' => route('talk.testing-middleware'), 'previous' => route('talk.testing-views')]);
-})->name('talk.testing-store-method');
+Route::get('/testing-storing-in-db', function () {
+    return view('talk/testing-storing-in-db', ['next' => route('talk.testing-file-storage'), 'previous' => route('talk.testing-views')]);
+})->name('talk.testing-storing-in-db');
+
+Route::get('/testing-file-storage', function () {
+    return view('talk/testing-file-storage', ['next' => route('talk.testing-pattern'), 'previous' => route('talk.testing-storing-in-db')]);
+})->name('talk.testing-file-storage');
+
+Route::get('/testing-pattern', function () {
+    return view('talk/testing-pattern', ['next' => route('talk.testing-middleware'), 'previous' => route('talk.testing-file-storage')]);
+})->name('talk.testing-pattern');
 
 Route::get('/testing-middleware', function () {
-    return view('talk/testing-middleware', ['next' => route('talk.testing-form-requests'), 'previous' => route('talk.testing-views')]);
+    return view('talk/testing-middleware', ['next' => route('talk.testing-form-requests'), 'previous' => route('talk.testing-pattern')]);
 })->name('talk.testing-middleware');
 
 Route::get('/testing-form-requests', function () {
@@ -53,57 +61,41 @@ Route::get('/testing-jobs', function () {
 })->name('talk.testing-jobs');
 
 Route::get('/testing-repeated-jobs', function () {
-    return view('talk/testing-repeated-jobs', ['next' => route('talk.testing-jobs-inside-jobs'), 'previous' => route('talk.testing-jobs')]);
+    return view('talk/testing-repeated-jobs', ['next' => route('talk.testing-mails'), 'previous' => route('talk.testing-jobs')]);
 })->name('talk.testing-repeated-jobs');
 
-Route::get('/testing-jobs-inside-jobs', function () {
-    return view('talk/testing-jobs-inside-jobs', ['next' => route('talk.testing-file-storage'), 'previous' => route('talk.testing-repeated-jobs')]);
-})->name('talk.testing-jobs-inside-jobs');
-
-Route::get('/testing-file-storage', function () {
-    return view('talk/testing-file-storage', ['next' => route('talk.testing-mails'), 'previous' => route('talk.testing-jobs-inside-jobs')]);
-})->name('talk.testing-file-storage');
-
 Route::get('/testing-mails', function () {
-    return view('talk/testing-mails', ['next' => route('talk.testing-http-client'), 'previous' => route('talk.testing-file-storage')]);
+    return view('talk/testing-mails', ['next' => route('talk.testing-http-client'), 'previous' => route('talk.testing-repeated-jobs')]);
 })->name('talk.testing-mails');
 
 Route::get('/testing-http-client', function () {
-    return view('talk/testing-http-client', ['next' => route('talk.mocks-stubs-spies'), 'previous' => route('talk.testing-mails')]);
+    return view('talk/testing-http-client', ['next' => route('talk.mocks'), 'previous' => route('talk.testing-mails')]);
 })->name('talk.testing-http-client');
 
-Route::get('/mocks-stubs-spies', function () {
-    return view('talk/mocks-stubs-spies', ['next' => route('talk.mocking-in-laravel'), 'previous' => route('talk.testing-http-client')]);
-})->name('talk.mocks-stubs-spies');
-
-Route::get('/mocking-in-laravel', function () {
-    return view('talk/mocking-in-laravel', ['next' => route('talk.complex-queries-problem'), 'previous' => route('talk.mocks-stubs-spies')]);
-})->name('talk.mocking-in-laravel');
-
-Route::get('/complex-queries-problem', function () {
-    return view('talk/complex-queries-problem', ['next' => route('talk.repository-pattern'), 'previous' => route('talk.mocking-in-laravel')]);
-})->name('talk.complex-queries-problem');
-
-Route::get('/repository-pattern', function () {
-    return view('talk/repository-pattern', ['next' => route('talk.query-objects'), 'previous' => route('talk.complex-queries-problem')]);
-})->name('talk.repository-pattern');
+Route::get('/mocks', function () {
+    return view('talk/mocks', ['next' => route('talk.query-objects'), 'previous' => route('talk.testing-http-client')]);
+})->name('talk.mocks');
 
 Route::get('/query-objects', function () {
-    return view('talk/query-objects', ['next' => route('talk.mocking-eloquent-models'), 'previous' => route('talk.repository-pattern')]);
+    return view('talk/query-objects', ['next' => route('talk.data-providers'), 'previous' => route('talk.mocks')]);
 })->name('talk.query-objects');
 
-Route::get('/mocking-eloquent-models', function () {
-    return view('talk/mocking-eloquent-models', ['next' => route('talk.data-providers'), 'previous' => route('talk.query-objects')]);
-})->name('talk.mocking-eloquent-models');
-
 Route::get('/data-providers', function () {
-    return view('talk/data-providers', ['next' => route('talk.contract-tests'), 'previous' => route('talk.mocking-eloquent-models')]);
+    return view('talk/data-providers', ['next' => route('talk.fake-implementations'), 'previous' => route('talk.query-objects')]);
 })->name('talk.data-providers');
 
+Route::get('/fake-implementations', function () {
+    return view('talk/fake-implementations', ['next' => route('talk.contract-tests'), 'previous' => route('talk.data-providers')]);
+})->name('talk.fake-implementations');
+
 Route::get('/contract-tests', function () {
-    return view('talk/contract-tests', ['next' => route('talk.about-me'), 'previous' => route('talk.data-providers')]);
+    return view('talk/contract-tests', ['next' => route('talk.preserving-failing-tests'), 'previous' => route('talk.fake-implementations')]);
 })->name('talk.contract-tests');
 
-Route::get('/about-me', function () {
-    return view('talk/about-me', ['previous' => route('talk.contract-tests')]);
-})->name('talk.about-me');
+Route::get('/back-to-beginning', function () {
+    return redirect()->route('talk.intro');
+})->name('talk.back-to-beginning');
+
+Route::get('/preserving-failing-tests', function () {
+    return view('talk/preserving-failing-tests', ['next' => route('talk.intro'), 'previous' => route('talk.contract-tests')]);
+})->name('talk.preserving-failing-tests');

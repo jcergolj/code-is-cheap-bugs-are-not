@@ -37,24 +37,53 @@ $results = User::search($request)
         </x-ul>
 
         <x-p>
-            <strong>The naive approach — everything in controller:</strong>
+            <strong>Feature testing this is cumbersome:</strong>
         </x-p>
 
         <x-code language="php">
-public function index(Request $request)
+public function test_index_returns_only_editors()
 {
-    $results = User::search($request)
-        ->onlyEditor()
-        ->filterByStatus($request)
-        ->orderBy('created_at', 'desc')
-        ->paginate();
+    // ...
+}
 
-    return view('users.index', compact('results'));
+public function test_index_filters_by_active_status()
+{
+    // ...
+}
+
+public function test_index_filters_by_inactive_status()
+{
+    // ...
+}
+
+public function test_index_searches_by_name()
+{
+    // ...
+}
+
+public function test_index_searches_by_email()
+{
+    // ...
+}
+
+public function test_index_orders_by_created_at_desc()
+{
+    // ...
+}
+
+public function test_index_paginates_results()
+{
+    // ...
+}
+
+public function test_index_combines_editor_and_active_filters()
+{
+    // ...
 }
         </x-code>
 
         <x-p>
-            This works for simple cases, but becomes a nightmare as complexity grows.
+            Every new scope or filter multiplies your test cases. One small change breaks everything.
         </x-p>
     </x-body>
 @endsection

@@ -44,23 +44,23 @@ use Mockery;
 $this->partialMock(User::class, function ($mock) {
     $mock->shouldReceive('search')
         ->with(Request::class)
-        ->onc()
+        ->once()
         ->andReturn($mock);
 
     $mock->shouldReceive('onlyEditor')
-        ->onc()
+        ->once()
         ->andReturn($mock);
 
     $mock->shouldReceive('filterByStatus')
-        ->onc()
+        ->once()
         ->andReturn($mock);
 
     $mock->shouldReceive('orderBy')
-        ->onc()
+        ->once()
         ->andReturn($mock);
 
     $mock->shouldReceive('paginate')
-        ->onc()
+        ->once()
         ->andReturn(User::paginate());
 });
 

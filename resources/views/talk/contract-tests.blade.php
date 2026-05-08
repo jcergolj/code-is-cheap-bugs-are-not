@@ -13,34 +13,25 @@
         </x-p>
 
         <x-p>
-            <strong>The problem:</strong>
-        </x-p>
-
-        <x-p>
             You write a fake payment gateway for fast tests. Months later, the real API changes. Your tests still pass, but production breaks.
         </x-p>
 
-        <x-p>
-            <strong>The contract:</strong>
-        </x-p>
+        <img src="/images/contract-test-diagram.png" alt="Contract Test Pattern Diagram" class="w-full rounded-lg shadow-md" />
+
+        <x-section-label>The Contract</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace App\Contracts;
-
+// app/Contracts/PaymentGateway.php
 interface PaymentGateway
 {
     public function charge(int $amount, string $token): array;
-    public function refund(string $chargeId): bool;
 }
         </x-code>
 
-        <x-p>
-            <strong>The fake (fast, for unit tests):</strong>
-        </x-p>
+        <x-section-label>The Fake (fast, for unit tests)</x-section-label>
 
         <x-code language="php">
+// app/Services/Payment/FakePaymentGateway.php
 class FakePaymentGateway implements PaymentGateway
 {
     public function charge(int $amount, string $token): array
@@ -51,19 +42,13 @@ class FakePaymentGateway implements PaymentGateway
             'amount' => $amount,
         ];
     }
-
-    public function refund(string $chargeId): bool
-    {
-        return true;
-    }
 }
         </x-code>
 
-        <x-p>
-            <strong>The real implementation (slow, hits API):</strong>
-        </x-p>
+        <x-section-label>The Real Implementation (slow, hits API)</x-section-label>
 
         <x-code language="php">
+// app/Services/Payment/StripePaymentGateway.php
 class StripePaymentGateway implements PaymentGateway
 {
     public function charge(int $amount, string $token): array
@@ -77,145 +62,60 @@ class StripePaymentGateway implements PaymentGateway
 
         return $response->json();
     }
-
-    public function refund(string $chargeId): bool
-    {
-        $response = Http::withToken(config('services.stripe.secret'))
-            ->post("https://api.stripe.com/v1/refunds", [
-                'charge' => $chargeId,
-            ]);
-
-        return $response->successful();
-    }
 }
         </x-code>
 
-        <x-p>
-            <strong>Visual diagram:</strong>
-        </x-p>
-
-        <x-p>
-            <pre class="text-sm bg-gray-100 p-4 rounded-lg overflow-x-auto">
-┌─────────────────────────────────────────────────────────────┐
-│                    Contract Test Pattern                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   ┌──────────────┐         ┌──────────────┐                │
-│   │   Contract   │◄────────│  Same Tests  │                │
-│   │  Interface   │         │   Run Twice  │                │
-│   └──────┬───────┘         └──────────────┘                │
-│          │                                                  │
-│    ┌─────┴─────┐                                            │
-│    │           │                                            │
-│    ▼           ▼                                            │
-│ ┌────────┐  ┌────────┐                                      │
-│ │  Fake  │  │  Real  │                                      │
-│ │Gateway │  │Gateway │                                      │
-│ │(fast)  │  │(slow)  │                                      │
-│ └───┬────┘  └───┬────┘                                      │
-│     │           │                                           │
-│     ▼           ▼                                           │
-│  ┌─────┐     ┌─────────┐                                   │
-│  │ Pass│     │  Pass   │  ◄── Both must behave identically │
-│  └─────┘     └─────────┘                                   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-            </pre>
-        </x-p>
-
-        <x-p>
-            <strong>The contract test — trait approach:</strong>
-        </x-p>
+        <x-section-label>The Contract Test — data provider approach</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace Tests\Contracts;
-
-trait PaymentGatewayContractTests
+// tests/Contracts/PaymentGatewayContractTest.php
+class PaymentGatewayContractTest extends TestCase
 {
-    abstract protected function getGateway(): PaymentGateway;
-
     #[Test]
-    public function charge_returns_successful_response(): void
+    #[DataProvider('gatewaysProviders')]
+    public function charges_with_a_valid_payment_token_are_successful($paymentGateway)
     {
-        $gateway = $this->getGateway();
+        $charge = $paymentGateway->charge(2500, $paymentGateway->getValidToken());
 
-        $charge = $gateway->charge(2500, 'valid-token');
-
-        $this->assertArrayHasKey('id', $charge);
-        $this->assertArrayHasKey('status', $charge);
-        $this->assertSame(2500, $charge['amount']);
+        $this->assertSame(2500, $charge);
     }
 
     #[Test]
-    public function charge_fails_with_invalid_token(): void
+    #[DataProvider('gatewaysProviders')]
+    public function charges_with_an_invalid_payment_token_fail($paymentGateway)
     {
-        $gateway = $this->getGateway();
+        try {
+            $paymentGateway->charge(2500, 'invalid-payment-token');
+        } catch (Exception $e) {
+            $this->assertTrue(true);
+            return;
+        }
 
-        $this->expectException(PaymentFailedException::class);
-
-        $gateway->charge(2500, 'invalid-token');
+        $this->fail('Charging with an invalid payment token did not throw a PaymentFailedException.');
     }
 
-    #[Test]
-    public function refund_returns_true_for_valid_charge(): void
+    public function gatewaysProviders()
     {
-        $gateway = $this->getGateway();
-
-        $charge = $gateway->charge(1000, 'valid-token');
-        $refunded = $gateway->refund($charge['id']);
-
-        $this->assertTrue($refunded);
-    }
-}
-        </x-code>
-
-        <x-p>
-            <strong>Test the fake:</strong>
-        </x-p>
-
-        <x-code language="php">
-class FakePaymentGatewayTest extends TestCase
-{
-    use PaymentGatewayContractTests;
-
-    protected function getGateway(): PaymentGateway
-    {
-        return new FakePaymentGateway;
+        return [
+            'Fake payment gateway' => [new FakePaymentGateway()],
+            'Stripe payment gateway' => [new StripePaymentGateway('secret-stripe-key')],
+        ];
     }
 }
         </x-code>
 
-        <x-p>
-            <strong>Test the real implementation:</strong>
-        </x-p>
-
-        <x-code language="php">
-#[Group('integration')]
-class StripePaymentGatewayTest extends TestCase
-{
-    use PaymentGatewayContractTests;
-
-    protected function getGateway(): PaymentGateway
-    {
-        return new StripePaymentGateway(config('services.stripe.secret'));
-    }
-}
-        </x-code>
-
-        <x-p>
-            <strong>Run only fast tests:</strong>
-        </x-p>
+        <x-section-label>Run only fast tests</x-section-label>
 
         <x-code language="bash">
-# Run all tests except integration
-php artisan test --exclude-group=integration
+# Run only the fake variant
+php artisan test --filter='gatewaysProviders.*Fake'
 
-# Run only integration tests
-php artisan test --group=integration
+# Run only the stripe variant
+php artisan test --filter='gatewaysProviders.*Stripe'
         </x-code>
 
-        <x-read-more href="https://jcergolj.me.uk/blog/contract-tests">Contract Tests</x-read-more>
+        <x-read-more href="https://jcergolj.me.uk/blog/contract-tests">
+            Contract Tests
+        </x-read-more>
     </x-body>
 @endsection

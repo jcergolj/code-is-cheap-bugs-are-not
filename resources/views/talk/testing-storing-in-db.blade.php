@@ -1,10 +1,10 @@
 @extends('layouts.talk-app')
 
 @section('content')
-    <x-title>Testing the Store Method</x-title>
+    <x-title>Storing in Database</x-title>
 
     <x-small-title>
-        assertSeeInDatabase vs assertSame
+        assertDatabaseHas vs assertSame
     </x-small-title>
 
     <x-body>
@@ -12,11 +12,10 @@
             When testing a store method, you want to know the record was created correctly.
         </x-p>
 
-        <x-p>
-            <strong>The controller:</strong>
-        </x-p>
+        <x-section-label>Controller</x-section-label>
 
         <x-code language="php">
+// app/Http/Controllers/UserController.php
 public function store(StoreUserRequest $request)
 {
     $user = User::create($request->validated());
@@ -25,11 +24,10 @@ public function store(StoreUserRequest $request)
 }
         </x-code>
 
-        <x-p>
-            <strong>The vague way:</strong>
-        </x-p>
+        <x-section-label>The vague way</x-section-label>
 
         <x-code language="php">
+// tests/Feature/Http/Controllers/UserController/StoreTest.php
 $this->post(route('users.store'), [
     'name' => 'John Doe',
     'email' => 'john@example.com',
@@ -37,14 +35,14 @@ $this->post(route('users.store'), [
 
 $this->assertDatabaseHas('users', [
     'email' => 'john@example.com',
+    'name' => 'John Doe',
 ]);
         </x-code>
 
-        <x-p>
-            <strong>The granular way I prefer:</strong>
-        </x-p>
+        <x-section-label>The granular way I prefer</x-section-label>
 
         <x-code language="php">
+// tests/Feature/Http/Controllers/UserController/StoreTest.php
 $response = $this->post(route('users.store'), [
     'name' => 'John Doe',
     'email' => 'john@example.com',

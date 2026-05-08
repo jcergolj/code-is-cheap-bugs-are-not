@@ -1,5 +1,6 @@
 import * as Turbo from "@hotwired/turbo";
 import Prism from "prismjs";
+import "prismjs/plugins/line-highlight";
 
 const NEXT_KEYS = ["ArrowRight", " ", "Spacebar"];
 const PREVIOUS_KEYS = ["ArrowLeft", "Backspace"];

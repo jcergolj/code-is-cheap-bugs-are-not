@@ -1,7 +1,7 @@
 @extends('layouts.talk-app')
 
 @section('content')
-    <x-title>Testing Middleware</x-title>
+    <x-title>Middleware</x-title>
 
     <x-small-title>
         The gatekeepers of your application
@@ -12,19 +12,10 @@
             Middleware runs before your controller. It deserves its own tests.
         </x-p>
 
-        <x-p>
-            <strong>The middleware:</strong>
-        </x-p>
+        <x-section-label>Middleware</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace App\Http\Middleware;
-
-use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-
+// app/Http/Middleware/RequireApiKey.php
 class RequireApiKey
 {
     public function handle(Request $request, Closure $next): mixed
@@ -38,72 +29,42 @@ class RequireApiKey
 }
         </x-code>
 
-        <x-p>
-            <strong>Applied in routes:</strong>
-        </x-p>
+        <x-section-label>Feature Test — assert middleware is applied</x-section-label>
 
-        <x-code language="php">
-Route::middleware(RequireApiKey::class)->group(function () {
-    Route::get('api/data', [ApiController::class, 'index']);
-});
-        </x-code>
-
-        <x-p>
-            <strong>Feature test — assert middleware is applied:</strong>
-        </x-p>
-
-        <x-code language="php">
+        <x-code language="php" dataLine="4">
+// tests/Feature/Http/Controllers/ApiControllerTest.php
 $response = $this->get(route('api.data'));
 
 $response->assertMiddlewareIsApplied('require-api-key');
         </x-code>
 
-        <x-p>
-            <strong>Unit test — assert middleware logic:</strong>
-        </x-p>
+        <x-section-label>Unit Test — assert middleware logic</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace Tests\Unit\Http\Middleware;
-
-use App\Http\Middleware\RequireApiKey;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use PHPUnit\Framework\Attributes\Test;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Tests\TestCase;
-
-class RequireApiKeyTest extends TestCase
+// tests/Unit/Http/Middleware/RequireApiKeyTest.php
+public function missing_header_aborts_request(): void
 {
-    #[Test]
-    public function missing_header_aborts_request(): void
-    {
-        $this->expectException(HttpException::class);
+    $this->expectException(HttpException::class);
 
-        $middleware = new RequireApiKey;
-        $request = new Request;
+    $middleware = new RequireApiKey;
+    $request = new Request;
 
-        $middleware->handle($request, function () {
-            $this->fail('Next middleware was called.');
-        });
-    }
+    $middleware->handle($request, function () {
+        $this->fail('Next middleware was called.');
+    });
+}
 
-    #[Test]
-    public function valid_header_continues_request(): void
-    {
-        $request = Request::create('/api/data', 'GET');
-        $request->headers->set('X-Api-Key', 'secret');
+public function valid_header_continues_request(): void
+{
+    $request = Request::create('/api/data', 'GET');
+    $request->headers->set('X-Api-Key', 'secret');
 
-        $expectedResponse = new Response('allowed', Response::HTTP_OK);
-        $next = function () use ($expectedResponse) {
-            return $expectedResponse;
-        };
+    $expectedResponse = new Response('allowed', Response::HTTP_OK);
+    $next = fn() => $expectedResponse;
 
-        $actualResponse = (new RequireApiKey)->handle($request, $next);
+    $actualResponse = (new RequireApiKey)->handle($request, $next);
 
-        $this->assertSame($expectedResponse, $actualResponse);
-    }
+    $this->assertSame($expectedResponse, $actualResponse);
 }
         </x-code>
 

@@ -9,7 +9,7 @@
 
     <x-body>
         <x-p>
-            Sometimes a job dispatches another job. Test both independently.
+            Sometimes a job dispatches another job.
         </x-p>
 
         <x-p>
@@ -33,52 +33,11 @@ class ProcessOrder implements ShouldQueue
 
     public function handle(): void
     {
-        $this->order->update(['status' => 'processing']);
+        // ...
 
         UpdateStorage::dispatch($this->order);
     }
 }
-        </x-code>
-
-        <x-p>
-            <strong>The child job:</strong>
-        </x-p>
-
-        <x-code language="php">
-&lt;?php
-
-namespace App\Jobs;
-
-use App\Models\Order;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-
-class UpdateStorage implements ShouldQueue
-{
-    use Dispatchable;
-
-    public function __construct(public Order $order) {}
-
-    public function handle(): void
-    {
-        $this->order->storage->increment('item_count');
-    }
-}
-        </x-code>
-
-        <x-p>
-            <strong>Feature test — assert child job is dispatched:</strong>
-        </x-p>
-
-        <x-code language="php">
-use Illuminate\Support\Facades\Queue;
-
-Queue::fake();
-
-$this->post(route('orders.store'), $data);
-
-Queue::assertPushed(ProcessOrder::class);
-Queue::assertPushed(UpdateStorage::class);
         </x-code>
 
         <x-p>
@@ -106,8 +65,7 @@ class ProcessOrderTest extends TestCase
 
         $order = Order::factory()->create();
 
-        $job = new ProcessOrder($order);
-        $job->handle();
+        ProcessOrder::dispatch($order);
 
         Queue::assertPushed(UpdateStorage::class, function ($job) use ($order) {
             $this->assertTrue($job->order->is($order));

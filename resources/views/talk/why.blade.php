@@ -4,7 +4,7 @@
     <x-title>Why?</x-title>
 
     <x-small-title>
-        In the AI era, we ship more bugs, faster.
+        I test so I can sleep at night.
     </x-small-title>
 
     <x-body>
@@ -22,9 +22,8 @@
 
         <x-ul>
             <x-li>Does the code actually do what it's supposed to do?</x-li>
-            <x-li>TDD or not TDD — when does it matter?</x-li>
-            <x-li>How do we stay safe when Laravel updates?</x-li>
-            <x-li>How do we handle PHP version changes safely?</x-li>
+            <x-li>Is it wired up correctly?</x-li>
+            <x-li>Can I upgrade Laravel without fear?</x-li>
         </x-ul>
 
         <x-p class="text-2xl md:text-3xl text-[#64748b] mt-8 italic line-through">

@@ -1,6 +1,6 @@
 @extends('layouts.talk-app')
 
-@section('content-center')
+@section('content')
     <x-title>Arrange, Act, Assert</x-title>
 
     <x-small-title>
@@ -8,16 +8,27 @@
     </x-small-title>
 
     <x-body>
-        <x-p>
-            <strong>Arrange</strong> — set up the world.
-        </x-p>
+        <x-section-label>Arrange — set up the world</x-section-label>
 
-        <x-p>
-            <strong>Act</strong> — do the thing.
-        </x-p>
+        <x-code language="php">
+$user = User::factory()->create(['name' => 'John']);
+        </x-code>
 
-        <x-p>
-            <strong>Assert</strong> — check the result.
-        </x-p>
+        <x-section-label>Act — do the thing</x-section-label>
+
+        <x-code language="php">
+$response = $this->get('/users');
+        </x-code>
+
+        <x-section-label>Assert — check the result</x-section-label>
+
+        <x-code language="php">
+$response->assertOk();
+
+$this->assertDatabaseHas('users', [
+    'name' => 'John Doe',
+    'email' => 'john@example.com',
+]);
+        </x-code>
     </x-body>
 @endsection

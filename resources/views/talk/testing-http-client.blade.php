@@ -1,7 +1,7 @@
 @extends('layouts.talk-app')
 
 @section('content')
-    <x-title>Testing HTTP Client</x-title>
+    <x-title>HTTP Client</x-title>
 
     <x-small-title>
         Fake the API, assert the request
@@ -12,17 +12,10 @@
             External APIs are unreliable. Fake them and test your integration.
         </x-p>
 
-        <x-p>
-            <strong>The controller making two API calls:</strong>
-        </x-p>
+        <x-section-label>Controller</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace App\Http\Controllers;
-
-use Illuminate\Support\Facades\Http;
-
+// app/Http/Controllers/SyncController.php
 class SyncController extends Controller
 {
     public function __invoke()
@@ -49,15 +42,10 @@ class SyncController extends Controller
 }
         </x-code>
 
-        <x-p>
-            <strong>Feature test — assert both requests:</strong>
-        </x-p>
+        <x-section-label>Feature Test — assert both requests</x-section-label>
 
-        <x-code language="php">
-use Illuminate\Http\Client\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
-
+        <x-code language="php" dataLine="2-9,13-16">
+// tests/Feature/Http/Controllers/SyncControllerTest.php
 Http::fake([
     'api.trello.com/*' => Http::response([
         'id' => 'trello-card-123',
@@ -75,11 +63,10 @@ Http::assertSentInOrder([
 ]);
         </x-code>
 
-        <x-p>
-            <strong>Protected callback methods for readability:</strong>
-        </x-p>
+        <x-section-label>Protected callback methods for readability</x-section-label>
 
         <x-code language="php">
+// tests/Feature/Http/Controllers/SyncControllerTest.php
 protected function assertTrelloRequestIsSent()
 {
     return function (Request $request) {

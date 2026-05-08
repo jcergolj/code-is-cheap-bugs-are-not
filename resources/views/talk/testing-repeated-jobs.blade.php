@@ -1,7 +1,7 @@
 @extends('layouts.talk-app')
 
 @section('content')
-    <x-title>Testing Repeated Jobs</x-title>
+    <x-title>Repeated Jobs</x-title>
 
     <x-small-title>
         Better ways to test same-class jobs
@@ -12,11 +12,10 @@
             When the same job is dispatched multiple times, standard assertions hide which one failed.
         </x-p>
 
-        <x-p>
-            <strong>The controller:</strong>
-        </x-p>
+        <x-section-label>Controller</x-section-label>
 
         <x-code language="php">
+// app/Http/Controllers/JobController.php
 class JobController extends Controller
 {
     public function __invoke()
@@ -27,27 +26,20 @@ class JobController extends Controller
 }
         </x-code>
 
-        <x-p>
-            <strong>The standard way (vague):</strong>
-        </x-p>
+        <x-section-label>Standard way (vague)</x-section-label>
 
         <x-code language="php">
+// tests/Feature/Http/Controllers/JobControllerTest.php
 Queue::assertPushed(TestJob::class, 2);
 
-Queue::assertPushed(function (TestJob $job) {
-    return $job->name === 'John' && $job->age === 30;
-});
-
-Queue::assertPushed(function (TestJob $job) {
-    return $job->name === 'Will' && $job->age === 20;
-});
+Queue::assertPushed(fn($job) => $job->name === 'John' && $job->age === 30);
+Queue::assertPushed(fn($job) => $job->name === 'Will' && $job->age === 20);
         </x-code>
 
-        <x-p>
-            <strong>The better way (pinpoint exact failures):</strong>
-        </x-p>
+        <x-section-label>Better way (pinpoint exact failures)</x-section-label>
 
         <x-code language="php">
+// tests/Feature/Http/Controllers/JobControllerTest.php
 Queue::assertPushed(TestJob::class, 2);
 
 $index = 0;
@@ -79,6 +71,8 @@ Queue::assertPushed(function (TestJob $job) use (&$index, $assertions) {
             Now you know exactly which job and which parameter failed.
         </x-p>
 
-        <x-read-more href="https://jcergolj.me.uk/blog/better-ways-to-test-repeated-laravel-jobs">Better Ways to Test Repeated Laravel Jobs</x-read-more>
+        <x-read-more href="https://jcergolj.me.uk/blog/better-ways-to-test-repeated-laravel-jobs">
+            Better Ways to Test Repeated Laravel Jobs
+        </x-read-more>
     </x-body>
 @endsection

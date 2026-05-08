@@ -1,7 +1,7 @@
 @extends('layouts.talk-app')
 
 @section('content')
-    <x-title>Testing Mails</x-title>
+    <x-title>Mails</x-title>
 
     <x-small-title>
         Don't actually send emails in tests
@@ -12,18 +12,10 @@
             Use Mail::fake() to assert emails are queued without sending them.
         </x-p>
 
-        <x-p>
-            <strong>The mailable:</strong>
-        </x-p>
+        <x-section-label>Mailable</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace App\Mail;
-
-use App\Models\Order;
-use Illuminate\Mail\Mailable;
-
+// app/Mail/OrderConfirmation.php
 class OrderConfirmation extends Mailable
 {
     public function __construct(public Order $order) {}
@@ -41,7 +33,6 @@ class OrderConfirmation extends Mailable
         return new Content(
             markdown: 'emails.order-confirmation',
             with: [
-                'order' => $this->order,
                 'trackingUrl' => "https://example.com/track/{$this->order->tracking_number}",
             ],
         );
@@ -49,31 +40,24 @@ class OrderConfirmation extends Mailable
 }
         </x-code>
 
-        <x-p>
-            <strong>The controller:</strong>
-        </x-p>
+        <x-section-label>Controller</x-section-label>
 
         <x-code language="php">
-use Illuminate\Support\Facades\Mail;
-
+// app/Http/Controllers/OrderController.php
 public function store(StoreOrderRequest $request)
 {
     $order = Order::create($request->validated());
 
     Mail::to($order->email)
         ->send(new OrderConfirmation($order));
-
-    return redirect()->route('orders.show', $order);
+    // ...
 }
         </x-code>
 
-        <x-p>
-            <strong>Feature test — assert mail is sent:</strong>
-        </x-p>
+        <x-section-label>Feature Test — assert mail is sent</x-section-label>
 
-        <x-code language="php">
-use Illuminate\Support\Facades\Mail;
-
+        <x-code language="php" dataLine="2, 6, 8-13">
+// tests/Feature/Http/Controllers/OrderController/StoreTest.php
 Mail::fake();
 
 $this->post(route('orders.store'), $data);
@@ -88,27 +72,16 @@ Mail::assertQueued(OrderConfirmation::class, function ($mail) {
 });
         </x-code>
 
-        <x-p>
-            <strong>Unit test — what you can test:</strong>
-        </x-p>
+        <x-section-label>Unit Test — assert mail content</x-section-label>
 
         <x-code language="php">
-&lt;?php
-
-namespace Tests\Unit\Mail;
-
-use App\Mail\OrderConfirmation;
-use App\Models\Order;
-use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
-
+// tests/Unit/Mail/OrderConfirmationTest.php
 class OrderConfirmationTest extends TestCase
 {
     #[Test]
     public function mail_has_correct_subject(): void
     {
         $order = Order::factory()->create();
-
         $mail = new OrderConfirmation($order);
 
         $this->assertSame(
@@ -118,38 +91,14 @@ class OrderConfirmationTest extends TestCase
     }
 
     #[Test]
-    public function mail_has_correct_sender(): void
-    {
-        $order = Order::factory()->create();
-
-        $mail = new OrderConfirmation($order);
-
-        $this->assertTrue($mail->hasFrom('shop@example.com'));
-    }
-
-    #[Test]
     public function mail_has_correct_recipient(): void
     {
         $order = Order::factory()->create([
             'email' => 'customer@example.com',
         ]);
-
         $mail = new OrderConfirmation($order);
 
         $this->assertTrue($mail->hasTo('customer@example.com'));
-    }
-
-    #[Test]
-    public function mail_uses_markdown_view(): void
-    {
-        $order = Order::factory()->create();
-
-        $mail = new OrderConfirmation($order);
-
-        $this->assertSame(
-            'emails.order-confirmation',
-            $mail->content()->markdown
-        );
     }
 
     #[Test]
@@ -158,7 +107,6 @@ class OrderConfirmationTest extends TestCase
         $order = Order::factory()->create([
             'tracking_number' => 'TRACK123',
         ]);
-
         $mail = new OrderConfirmation($order);
 
         $this->assertArrayHasKey('trackingUrl', $mail->content()->with);
