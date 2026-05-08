@@ -1,0 +1,42 @@
+[
+    {
+        "module": "prismjs",
+        "path": "dist/js/vendor/prismjs-b42ac71ed6e743ad32dcdee296c817a9ae5b421d.js",
+        "preload": true
+    },
+    {
+        "module": "laravel-echo",
+        "path": "dist/js/vendor/laravel-echo-aff5e3c8524efc5307fc8f610dc5fbce51fdc46f.js",
+        "preload": true
+    },
+    {
+        "module": "pusher-js",
+        "path": "dist/js/vendor/pusher-js-1df9438871854d56c343e048b16bfab1b4bd18d7.js",
+        "preload": true
+    },
+    {
+        "module": "@hotwired/stimulus",
+        "path": "dist/js/vendor/@hotwired--stimulus-81c84ed60b06803bacdece6ac9c6b180976a753c.js",
+        "preload": true
+    },
+    {
+        "module": "@hotwired/turbo",
+        "path": "dist/js/vendor/@hotwired--turbo-d4801e346a84a3c1470b48565c8d23264436390f.js",
+        "preload": true
+    },
+    {
+        "module": "el-transition",
+        "path": "dist/js/vendor/el-transition-d13f7e222a0904db370f19c2c4fad1d2d3b7f85a.js",
+        "preload": true
+    },
+    {
+        "module": "app",
+        "path": "dist/js/app-c7e52c1eb1dcdbf864620d56c8cc23d0d879877d.js",
+        "preload": true
+    },
+    {
+        "module": "bootstrap",
+        "path": "dist/js/bootstrap-bf7020f455edfb6a217a4bf7eb42a18993a74fd3.js",
+        "preload": true
+    }
+]

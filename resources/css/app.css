@@ -1,0 +1,241 @@
+@import "tailwindcss";
+
+/* Cool Blue Light Theme - Semantic CSS Variables */
+:root {
+    --color-bg-primary: #f0f9ff;
+    --color-bg-secondary: #e0f2fe;
+    --color-bg-tertiary: #dbeafe;
+    --color-text-primary: #0c4a6e;
+    --color-text-secondary: #0f172a;
+    --color-text-muted: #64748b;
+    --color-text-dim: #94a3b8;
+    --color-accent: #0284c7;
+    --color-accent-hover: #0369a1;
+    --color-accent-light: #38bdf8;
+    --color-code-bg: #0c4a6e;
+    --color-glass-bg: rgba(255, 255, 255, 0.7);
+}
+
+/* Tailwind v4 Theme Configuration */
+@theme {
+    --color-talk-bg-primary: var(--color-bg-primary);
+    --color-talk-bg-secondary: var(--color-bg-secondary);
+    --color-talk-bg-tertiary: var(--color-bg-tertiary);
+    --color-talk-text-primary: var(--color-text-primary);
+    --color-talk-text-secondary: var(--color-text-secondary);
+    --color-talk-text-muted: var(--color-text-muted);
+    --color-talk-text-dim: var(--color-text-dim);
+    --color-talk-accent: var(--color-accent);
+    --color-talk-accent-hover: var(--color-accent-hover);
+    --color-talk-accent-light: var(--color-accent-light);
+    --color-talk-code-bg: var(--color-code-bg);
+    --color-talk-glass-bg: var(--color-glass-bg);
+}
+
+/* Custom Utility Classes */
+.gradient-bg {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.code-block {
+    background: #0c4a6e;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px -12px rgba(12, 74, 110, 0.4);
+}
+
+/* PrismJS - Cool Blue Light */
+code[class*="language-"],
+pre[class*="language-"] {
+    color: #e0f2fe;
+    background: none;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 1.5rem;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.6;
+    tab-size: 4;
+    hyphens: none;
+}
+
+pre[class*="language-"] {
+    padding: 1.5em;
+    margin: 0.5em 0;
+    overflow: auto;
+    border-radius: 12px;
+    background: #0c4a6e;
+}
+
+:not(pre) > code[class*="language-"] {
+    padding: 0.2em 0.4em;
+    border-radius: 0.3em;
+    white-space: normal;
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.token.punctuation {
+    color: #cbd5e1;
+}
+
+.token.namespace {
+    opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #f472b6;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #86efac;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #93c5fd;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #c084fc;
+}
+
+.token.function,
+.token.class-name {
+    color: #60a5fa;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #fbbf24;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+/* Line highlight */
+pre[data-line] {
+    position: relative;
+    padding: 1em 0 1em 3em;
+}
+
+.line-highlight {
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding: inherit 0;
+    margin-top: 1em;
+    background: rgba(2, 132, 199, 0.1);
+    background: linear-gradient(to right, rgba(2, 132, 199, 0.15) 70%, rgba(2, 132, 199, 0));
+    pointer-events: none;
+    line-height: inherit;
+    white-space: pre;
+}
+
+.line-highlight:before,
+.line-highlight[data-end]:after {
+    content: attr(data-start);
+    position: absolute;
+    top: 0.4em;
+    left: 0.6em;
+    min-width: 1em;
+    padding: 0 0.5em;
+    background-color: rgba(2, 132, 199, 0.3);
+    color: #e0f2fe;
+    font: bold 65%/1.5 sans-serif;
+    text-align: center;
+    vertical-align: 0.3em;
+    border-radius: 999px;
+    text-shadow: none;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.line-highlight[data-end]:after {
+    content: attr(data-end);
+    top: auto;
+    bottom: 0.4em;
+}
+
+.line-numbers .line-highlight:before,
+.line-numbers .line-highlight:after {
+    content: none;
+}
+
+/* Line numbers */
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em;
+    letter-spacing: -1px;
+    border-right: 1px solid rgba(148, 163, 184, 0.3);
+    user-select: none;
+}
+
+.line-numbers-rows > span {
+    display: block;
+    counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+    content: counter(linenumber);
+    color: #94a3b8;
+    display: block;
+    padding-right: 0.8em;
+    text-align: right;
+}
