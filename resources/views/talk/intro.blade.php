@@ -2,14 +2,22 @@
 
 @section('content-center')
     <x-title>
-        Code is Cheap. Bugs in Production Never Have Been.
+        Code is cheap
     </x-title>
 
-    <x-small-title>
-        10 years of Laravel testing in a world where AI writes your code
+    <x-title class="text-rose-600">
+        Bugs in production never have been
+    </x-title>
+
+    <x-small-title class="mt-16">
+        In the age of AI, we can ship more bugs to production faster than ever.
     </x-small-title>
 
-    <x-medium-title>
+    <x-small-title>
+        Tests are the guardrails.
+    </x-small-title>
+
+    <x-medium-title class="mt-16">
         Verona, November 2026
     </x-medium-title>
 

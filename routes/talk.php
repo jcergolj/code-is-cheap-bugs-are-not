@@ -17,11 +17,15 @@ Route::get('/phpunit', function () {
 })->name('talk.phpunit');
 
 Route::get('/feature-vs-unit', function () {
-    return view('talk/feature-vs-unit', ['next' => route('talk.arrange-act-assert'), 'previous' => route('talk.phpunit')]);
+    return view('talk/feature-vs-unit', ['next' => route('talk.testing-pattern'), 'previous' => route('talk.phpunit')]);
 })->name('talk.feature-vs-unit');
 
+Route::get('/testing-pattern', function () {
+    return view('talk/testing-pattern', ['next' => route('talk.arrange-act-assert'), 'previous' => route('talk.feature-vs-unit')]);
+})->name('talk.testing-pattern');
+
 Route::get('/arrange-act-assert', function () {
-    return view('talk/arrange-act-assert', ['next' => route('talk.test-structure'), 'previous' => route('talk.feature-vs-unit')]);
+    return view('talk/arrange-act-assert', ['next' => route('talk.test-structure'), 'previous' => route('talk.testing-pattern')]);
 })->name('talk.arrange-act-assert');
 
 Route::get('/test-structure', function () {
@@ -37,15 +41,11 @@ Route::get('/testing-storing-in-db', function () {
 })->name('talk.testing-storing-in-db');
 
 Route::get('/testing-file-storage', function () {
-    return view('talk/testing-file-storage', ['next' => route('talk.testing-pattern'), 'previous' => route('talk.testing-storing-in-db')]);
+    return view('talk/testing-file-storage', ['next' => route('talk.testing-middleware'), 'previous' => route('talk.testing-storing-in-db')]);
 })->name('talk.testing-file-storage');
 
-Route::get('/testing-pattern', function () {
-    return view('talk/testing-pattern', ['next' => route('talk.testing-middleware'), 'previous' => route('talk.testing-file-storage')]);
-})->name('talk.testing-pattern');
-
 Route::get('/testing-middleware', function () {
-    return view('talk/testing-middleware', ['next' => route('talk.testing-form-requests'), 'previous' => route('talk.testing-pattern')]);
+    return view('talk/testing-middleware', ['next' => route('talk.testing-form-requests'), 'previous' => route('talk.testing-file-storage')]);
 })->name('talk.testing-middleware');
 
 Route::get('/testing-form-requests', function () {
@@ -97,5 +97,9 @@ Route::get('/back-to-beginning', function () {
 })->name('talk.back-to-beginning');
 
 Route::get('/preserving-failing-tests', function () {
-    return view('talk/preserving-failing-tests', ['next' => route('talk.intro'), 'previous' => route('talk.contract-tests')]);
+    return view('talk/preserving-failing-tests', ['next' => route('talk.closing'), 'previous' => route('talk.contract-tests')]);
 })->name('talk.preserving-failing-tests');
+
+Route::get('/closing', function () {
+    return view('talk/closing', ['next' => route('talk.intro'), 'previous' => route('talk.preserving-failing-tests')]);
+})->name('talk.closing');

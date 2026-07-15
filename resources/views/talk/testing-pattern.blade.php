@@ -8,10 +8,9 @@
     </x-small-title>
 
     <x-body>
-        <div class="flex flex-col md:flex-row justify-center items-center gap-4 my-4 max-w-3xl mx-auto">
-
+        <div class="flex flex-col justify-center">
             <!-- FEATURE TEST -->
-            <div class="order-1 bg-slate-800 p-4 rounded-lg border-2 border-sky-500 text-center w-full md:w-1/2 md:mx-2">
+            <div class="order-1 bg-slate-800 p-4 rounded-lg border-2 border-sky-500 text-center w-full">
                 <x-p class="text-lg font-bold text-sky-400 mb-1">FEATURE TEST</x-p>
                 <x-p class="text-base text-white mb-2">"Is it used?"</x-p>
 
@@ -26,13 +25,12 @@ Queue::assertPushed(ProcessOrder::class);
                 </x-code>
             </div>
 
-            <!-- PLUS -->
-            <div class="order-2 text-2xl text-slate-500">
+            <div class="order-2 text-8xl text-slate-500">
                 +
             </div>
 
             <!-- UNIT TEST -->
-            <div class="order-3 bg-slate-800 p-4 rounded-lg border-2 border-amber-500 text-center w-full md:w-1/2">
+            <div class="order-3 bg-slate-800 p-4 rounded-lg border-2 border-amber-500 text-center w-full">
                 <x-p class="text-lg font-bold text-amber-400 mb-1">UNIT TEST</x-p>
                 <x-p class="text-base text-white mb-2">"Does it work?"</x-p>
 
@@ -52,7 +50,7 @@ $this->assertSame($expected, $result);
         </x-p>
 
         <x-p>
-            Next up: middleware, form requests, events, and jobs.
+            Next up: how to apply it to views, database, files, middleware, form requests, events, and jobs.
         </x-p>
 
     </x-body>
