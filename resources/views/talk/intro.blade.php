@@ -2,7 +2,7 @@
 
 @section('content-center')
     <x-title>
-        Code is Cheap. Bugs in Production Aren't.
+        Code is Cheap. Bugs in Production Never Have Been.
     </x-title>
 
     <x-small-title>
@@ -10,7 +10,7 @@
     </x-small-title>
 
     <x-medium-title>
-        Ljubljana, May 2026
+        Verona, November 2026
     </x-medium-title>
 
     <div class="mt-20 flex items-center justify-center gap-3 text-slate-400 text-3xl">
@@ -31,8 +31,8 @@
             </svg>
         </a>
         <span class="text-slate-600">|</span>
-        <a href="https://jcergolj.me.uk" target="_blank" class="hover:text-sky-400 transition-colors">
-            https://jcergolj.me.uk
+        <a href="https://code-is-cheap-bugs-are-not.jcergolj.me.uk/" target="_blank" class="hover:text-sky-400 transition-colors">
+            https://code-is-cheap-bugs-are-not.jcergolj.me.uk/
         </a>
     </div>
 @endsection
